@@ -1,0 +1,66 @@
+In this file, it is explained how to call AS-L1 in Matlab to solve
+
+                       min 0.5||Ax-b||^2
+                 s.t. ||x||_1 <= tau,
+
+with given matrix A, vector b and l1-ball radius tau.
+-------------------------------------------------------------------------
+
+
+Usage.
+-------------------------------------------------------------------------
+X = as_l1_lasso(A,B,TAU)
+X = as_l1_lasso(A,B,TAU,OPTS)
+[X,F] = as_l1_lasso(__)
+[X,F,AS_L1_INFO] = as_l1_lasso(__)
+-------------------------------------------------------------------------
+
+
+Input arguments.
+-------------------------------------------------------------------------
+- A (required) is a matrix,
+- B (required) is a vector,
+- TAU (required) is the l1-ball radius,
+- OPTS (optional) is a structure with algorithm options (see below).
+-------------------------------------------------------------------------
+
+
+Output arguments.
+-------------------------------------------------------------------------
+- X is the final solution found by the algorithm;
+- F is the objective value at X;
+- AS_L1_INFO is a structure containing other output values:
+  AS_L1_INFO.it is the number of iterations;
+  AS_L1_INFO.flag is an integer describing the exit condition:
+    0 if the optimality violation <= 'eps_opt'
+      (default value of 'eps_opt' = 1e-5),
+    1 if the directional derivative of the objective function along the
+      search direction (in absolute value) <= 'min_gd'
+      (default value of 'min_gd' = 1e-20),
+    2 if the stepsize <= 'min_stepsize'
+      (default value of 'min_stepsize' = 1e-12),
+    3 if the number of iterations >= 'max_it'
+      (default value of 'max_it' = 10000),
+    4 if the objective value <= 'min_f'
+      (default value of 'min_f' = -Inf, i.e., it is not used).
+-------------------------------------------------------------------------
+
+
+Options.
+-------------------------------------------------------------------------
+To change the values of the above parameters 'eps_opt', 'min_gd',
+'min_stepsize', 'max_it' and 'min_f', use the structure OPTS (it is one
+of the input arguments of AS_L1, see above), having as field names the
+names of the parameters to be changed.
+Other parameters that can be changed in the same way are the following:
+- 'ls_memory': history length for the computation of the reference value in
+               the line search: set 'ls_memory' > 1 for non-monotone line
+               search, or 'ls_memory' = 1 for monotone line search
+               (default value of 'ls_memory' = 10);
+- 'proj': function handle to project a vector on the l1 ball
+          (defult value of 'proj': from https://lcondat.github.io/software);
+- 'x0': starting point
+        (default value of 'x0': origin);
+- 'verbosity': true for prints, false otherwise
+               (default value of 'verbosity' = false).
+-------------------------------------------------------------------------
