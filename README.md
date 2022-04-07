@@ -5,7 +5,7 @@ _Active-Set algorithm for minimization over the ℓ1-ball_ (AS-L1) is a solver f
           min f(x)
     s.t. ||x||_1 <= τ,
 
-with a given objective function _f(x)_ and _ℓ1_-ball radius _τ._
+with given objective function _f(x)_ and _ℓ1_-ball radius _τ._
 
 AS-L1 uses an active-set strategy and a projected spectral gradient direction with non-monotone line search.
 
@@ -50,7 +50,7 @@ plus the following subdirectories:
    This subdirectory should contain the following files:
 
      - `as_l1_lasso.m`, where the algorithm is implemented;
-     - `main.m`, with an example of how to call AS-L1 in Matlab to solve a user-defined problem;
+     - `main.m`, with an example of how to call AS-L1 in Matlab;
      - `usage.txt`, where inputs, outputs and options of the algorithm are explained in detail.
 
 * `logistic_regression`, with a Matlab implementation of AS-L1 to solve logistic regression problems. Namely, the objective function has the form
@@ -62,5 +62,5 @@ plus the following subdirectories:
    This subdirectory should contain the following files:
 
      - `as_l1_log_reg.m`, where the algorithm is implemented;
-     - `main.m`, with an example of how to call AS-L1 in Matlab to solve a user-defined problem;
+     - `main.m`, with an example of how to call AS-L1 in Matlab;
      - `usage.txt`, where inputs, outputs and options of the algorithm are explained in detail.
