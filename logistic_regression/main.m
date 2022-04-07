@@ -31,7 +31,7 @@
 % Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 % 
 % Last update of this file:
-% April 6th, 2022
+% April 7th, 2022
 % 
 % Licensing:
 % This file is part of AS-L1.
@@ -55,7 +55,7 @@ clear all, clc;
 
 rng(1);
 
-% In this file, it is shown how to call AS-L1 to solve a user-defined problem.
+% In this file, it is shown how to call AS-L1 to solve a user-defined problem
 
 % (1) Get the problem (i.e., matrix 'A', vector 'y' and l1-ball radius 'tau')
 m = 2^9;
@@ -82,7 +82,7 @@ tau = 0.01*n;
 %
 %     opts.verbosity = true;
 %
-% - pass the structure to AS-ZSL as fourth input argument, e.g.,
+% - pass the structure to AS-L1 as fourth input argument, e.g.,
 %
 %     [x,f,as_l1_info] = as_l1_log_reg(A,y,tau,opts);
 %
