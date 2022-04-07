@@ -31,7 +31,7 @@
 % Francesco Rinaldi (e-mail: rinaldi@math.unipd.it)
 % 
 % Last update of this file:
-% April 6th, 2022
+% April 7th, 2022
 % 
 % Licensing:
 % This file is part of AS-L1.
@@ -54,96 +54,96 @@
 function [x,f,as_l1_info] = as_l1_lasso(A,b,tau,opts)
     
     if (nargin < 3)
-        error('at least three input arguments are required');
+        error('At least three input arguments are required.');
     end
     if (nargin > 4)
-        error('at most four input arguments are required');
+        error('At most four input arguments are required.');
     end
     if (nargout > 3)
-        error('at most three output arguments are required');
+        error('At most three output arguments are required.');
     end
     
-    if (~isnumeric(A) || ~isreal(A) || ~ismatrix(A))
-        error('the first input must be a real matrix');
+    if (~ismatrix(A) || ~isnumeric(A) || ~isreal(A))
+        error('The first input must be a real matrix.');
     end
-    if (~isnumeric(b) || ~isreal(b) || ~iscolumn(b))
-        error('the second input must be a real column vector');
+    if (~iscolumn(b) || ~isnumeric(b) || ~isreal(b))
+        error('The second input must be a real column vector.');
     end
     if (size(A,1) ~= length(b))
-        error('the number of rows of the first input must be equal to the length of the second input');
+        error('The number of rows of the first input must be equal to the length of the second input.');
     end
-    if (~isnumeric(tau) || ~isreal(tau) || ~isscalar(tau) || tau<=0e0)
-        error('the third input must be a positive number');
+    if (~isscalar(tau) || ~isnumeric(tau) || ~isreal(tau) || tau<=0e0)
+        error('The third input must be a positive number.');
     end
     
     n = size(A,2);
     
     % set options
     eps_opt = 1e-5;
-    m = 10;
     max_it = 10000;
     min_f = -Inf;
     min_gd = 1e-20;
     min_stepsize = 1e-12;
+    m = 10;
     proj_l1ball = @(x) max(abs(x)-max(max((cumsum(sort(abs(x),1,'descend'),1)-tau)./(1:size(x,1))'),0),0).*sign(x); % from https://lcondat.github.io/software
     x = zeros(n,1);
     verbosity = false;
     if (nargin == 4)
         if (~isstruct(opts) || ~isscalar(opts))
-            error('the fourth input (which is optional) must be a structure');
+            error('The fourth input (which is optional) must be a structure.');
         end
         opts_field = fieldnames(opts);
         for i = 1:length(opts_field)
             switch char(opts_field(i))
                 case 'eps_opt'
                     eps_opt = opts.eps_opt;
-                    if (~isnumeric(eps_opt) || ~isreal(eps_opt) || ~isscalar(eps_opt) || eps_opt<0e0)
-                       error('in the options, ''eps_opt'' must be a non-negative real number');
+                    if (~isscalar(eps_opt) || ~isnumeric(eps_opt) || ~isreal(eps_opt) || eps_opt<0e0)
+                       error('In the options, ''eps_opt'' must be a non-negative number.');
                     end
-                case 'ls_memory'
-                    m = opts.ls_memory;
-                    if (~isnumeric(m) || ~isreal(m) || ~isscalar(m) || m<1e0)
-                       error('in the options, ''linesearch_memory'' must be a real number greater than or equal to 1');
-                    end
-                    m = floor(m);
                 case 'max_it'
                     max_it = opts.max_it;
-                    if (~isnumeric(max_it) || ~isreal(max_it) || ~isscalar(max_it) || max_it<1e0)
-                       error('in the options, ''max_it'' must be a real number greater than or equal to 1');
+                    if (~isscalar(max_it) || ~isnumeric(max_it) || ~isreal(max_it) || max_it<1e0)
+                       error('In the options, ''max_it'' must be a number greater than or equal to 1.');
                     end
                     max_it = floor(max_it);
                 case 'min_f'
                     min_f = opts.min_f;
-                    if (~isnumeric(min_f) || ~isreal(min_f) || ~isscalar(min_f))
-                       error('in the options, ''f_stop'' must be a real number');
+                    if (~isscalar(min_f) || ~isnumeric(min_f) || ~isreal(min_f))
+                       error('In the options, ''min_f'' must be a real number.');
                     end
                 case 'min_gd'
                     min_gd = opts.min_gd;
-                    if (~isnumeric(min_gd) || ~isreal(min_gd) || ~isscalar(min_gd) || min_gd<0e0)
-                       error('in the options, ''min_gd'' must be greater than or equal to 0');
+                    if (~isscalar(min_gd) || ~isnumeric(min_gd) || ~isreal(min_gd) || min_gd<0e0)
+                       error('In the options, ''min_gd'' must be a non-negative number.');
                     end
                 case 'min_stepsize'
                     min_stepsize = opts.min_stepsize;
-                    if (~isnumeric(min_gd) || ~isreal(min_gd) || ~isscalar(min_gd) || min_gd<0e0)
-                       error('in the options, ''min_stepsize'' must be greater than or equal to 0');
+                    if (~isscalar(min_stepsize) || ~isnumeric(min_stepsize) || ~isreal(min_stepsize) || min_stepsize<0e0)
+                       error('In the options, ''min_stepsize'' must be a non-negative number.');
                     end
+                case 'ls_memory'
+                    m = opts.ls_memory;
+                    if (~isscalar(m) || m<1e0 || ~isnumeric(m) || ~isreal(m))
+                       error('In the options, ''ls_memory'' must be a number greater than or equal to 1.');
+                    end
+                    m = floor(m);
                 case 'proj'
                     proj_l1ball = opts.proj;
                     if (~isa(proj_l1ball,'function_handle'))
-                      error('in the options, ''proj'' must be a function handle.');
+                      error('In the options, ''proj'' must be a function handle.');
                    end
                 case 'x0'
                     x = opts.x0;
-                    if (~isnumeric(x) || ~isreal(x) || ~iscolumn(x) || length(x) ~= n)
-                        error('in the options, ''x0'' must be a real column vector with length equal to the number of columns of A');
+                    if (~iscolumn(x) || ~isnumeric(x) || ~isreal(x) || length(x)~=n)
+                        error('In the options, ''x0'' must be a real column vector with length equal to the number of columns of A.');
                     end
                 case 'verbosity'
                     verbosity = opts.verbosity;
-                    if (~islogical(verbosity) || ~isscalar(verbosity))
-                       error('in the options, ''verbosity'' must be a logical');
+                    if (~isscalar(verbosity) || ~islogical(verbosity))
+                       error('In the options, ''verbosity'' must be a logical.');
                     end
                 otherwise
-                    error('not valid field name in the structure of options');
+                    error('Not valid field name in the structure of options.');
             end
         end
     end
@@ -160,7 +160,7 @@ function [x,f,as_l1_info] = as_l1_lasso(A,b,tau,opts)
         x = proj_l1ball(x);
     end
     
-    nnz_max = round(n/3);
+    nnz_max = round(n/3e0);
     
     it = 0;
     
