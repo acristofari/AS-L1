@@ -29,20 +29,20 @@ Output arguments.
 -------------------------------------------------------------------------
 - X is the final solution found by the algorithm;
 - F is the objective value at X;
-- AS_L1_INFO is a structure containing other output values:
-  AS_L1_INFO.it is the number of iterations;
-  AS_L1_INFO.flag is an integer describing the exit condition:
-    0 if the optimality violation <= 'eps_opt'
-      (default value of 'eps_opt' = 1e-5),
-    1 if the directional derivative of the objective function along the
-      search direction (in absolute value) <= 'min_gd'
-      (default value of 'min_gd' = 1e-20),
-    2 if the stepsize <= 'min_stepsize'
-      (default value of 'min_stepsize' = 1e-12),
-    3 if the number of iterations >= 'max_it'
-      (default value of 'max_it' = 10000),
-    4 if the objective value <= 'min_f'
-      (default value of 'min_f' = -Inf, i.e., it is not used).
+- AS_L1_INFO is a structure with the following fields:
+    'it' is the number of iterations;
+    'flag' is an integer describing the exit condition:
+           0 if the optimality violation <= 'eps_opt'
+             (default value of 'eps_opt' = 1e-5),
+           1 if the directional derivative of the objective function along the
+             search direction (in absolute value) <= 'min_gd'
+             (default value of 'min_gd' = 1e-20),
+           2 if the stepsize <= 'min_stepsize'
+             (default value of 'min_stepsize' = 1e-12),
+           3 if the number of iterations >= 'max_it'
+             (default value of 'max_it' = 10000),
+           4 if the objective value <= 'min_f'
+             (default value of 'min_f' = -Inf, i.e., it is not used).
 -------------------------------------------------------------------------
 
 
@@ -50,7 +50,7 @@ Options.
 -------------------------------------------------------------------------
 To change the values of the above parameters 'eps_opt', 'min_gd',
 'min_stepsize', 'max_it' and 'min_f', use the structure OPTS (it is one
-of the input arguments of AS_L1, see above), having as field names the
+of the input arguments of 'as_l1', see above), having as field names the
 names of the parameters to be changed.
 Other parameters that can be changed in the same way are the following:
 - 'ls_memory': history length for the computation of the reference value in
